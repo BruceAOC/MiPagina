@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BILLETERA AHORRATIVA</title>
+   <!DOCTYPE html>
+<html>
+<head>
+  <script>
+    function guardarMonto() {
+      var monto = document.getElementById('monto').value;
+      var fechaHora = new Date().toLocaleString(); // Obtener la fecha y hora actual
+      
+      // Obtener los montos guardados previamente (si existen)
+      var montosGuardados = localStorage.getItem('montos');
+      if (montosGuardados) {
+        montosGuardados = JSON.parse(montosGuardados);
+      } else {
+        montosGuardados = [];
+      }
+      
+      // Agregar el nuevo monto con fecha y hora a la lista
+      montosGuardados.push({
+        monto: parseFloat(monto),
+        fechaHora: fechaHora
+      });
+      
+      // Guardar la lista actualizada en el almacenamiento local
+      localStorage.setItem('montos', JSON.stringify(montosGuardados));
+      
+      // Calcular y mostrar el total de los montos guardados
+      mostrarTotal();
+      
+      // Mostrar los montos guardados
+      mostrarMontosGuardados();
+    }
+    
+    function mostrarMontosGuardados() {
+      var montosGuardados = localStorage.getItem('montos');
+      if (montosGuardados) {
+        montosGuardados = JSON.parse(montosGuardados);
+        var montoGuardadoHTML = "";
+        for (var i = 0; i < montosGuardados.length; i++) {
+          var monto = montosGuardados[i].monto;
+          var fechaHora = montosGuardados[i].fechaHora;
+          montoGuardadoHTML += "Monto " + (i + 1) + ": S/" + monto.toFixed(2) + " (Fecha y hora: " + fechaHora + ")<br>";
+        }
+        document.getElementById('montosGuardados').innerHTML = montoGuardadoHTML;
+      }
+    }
+    
+    function mostrarTotal() {
+      var montosGuardados = localStorage.getItem('montos');
+      if (montosGuardados) {
+        montosGuardados = JSON.parse(montosGuardados);
+        var total = montosGuardados.reduce(function(a, b) {
+          return a + b.monto;
+        }, 0);
+        document.getElementById('total').textContent = "Total: S/" + total.toFixed(2);
+      }
+    }
+    
+    function limpiarTodo() {
+      localStorage.removeItem('montos');
+      document.getElementById('montosGuardados').innerHTML = "";
+      document.getElementById('total').textContent = "Total: S/0.00";
+    }
+  </script>
+</head>
+<body>
+  <h1>Guardar Monto</h1>
+  <label for="monto">Monto a guardar:</label>
+  <input type="number" id="monto">
+  <button onclick="guardarMonto()">Guardar</button>
+  <button onclick="limpiarTodo()">Limpiar Todo</button>
+  <h2>Montos Guardados:</h2>
+  <div id="montosGuardados"></div>
+  <h2>Total:</h2>
+  <p id="total"></p>
+  
+  <script>
+    mostrarMontosGuardados(); // Mostrar los montos guardados al cargar la página
+    mostrarTotal(); // Mostrar el total al cargar la página
+  </script>
+</body>
+</html>
+
+</html>
